@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Green Life | Official Nature Portal</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap');
+
+        :root {
+            --primary: #00b894;
+            --dark-green: #006266;
+            --accent: #fdcb6e;
+            --bg: #f8fff9;
+            --text: #1e272e;
+            --card: #ffffff;
+            --glass: rgba(255, 255, 255, 0.9);
+        }
+
+        .dark-mode {
+            --bg: #0b1311;
+            --text: #e0eee0;
+            --primary: #55efc4;
+            --card: #15201e;
+            --glass: rgba(11, 19, 17, 0.9);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        body { background-color: var(--bg); color: var(--text); overflow-x: hidden; scroll-behavior: smooth; }
+
+        /* 1. TOP NEWS HEADLINE (FIXED) */
+        .headline-bar {
+            background: linear-gradient(90deg, var(--dark-green), var(--primary));
+            color: white; height: 40px; position: fixed; top: 0; width: 100%; z-index: 5000;
+            display: flex; align-items: center; border-bottom: 2px solid var(--accent);
+            overflow: hidden;
+        }
+        .headline-track { display: flex; white-space: nowrap; animation: scrollHeadline 25s linear infinite; }
+        .headline-track:hover { animation-play-state: paused; cursor: pointer; }
+        .h-item { padding: 0 40px; font-weight: 700; font-size: 14px; letter-spacing: 1px; }
+        @keyframes scrollHeadline { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* 2. GLASS HEADER */
+        header {
+            background: var(--glass); backdrop-filter: blur(15px); padding: 15px 8%;
+            display: flex; align-items: center; justify-content: space-between;
+            position: fixed; width: 100%; top: 40px; z-index: 4000;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .logo-box {
+            width: 45px; height: 45px; background: var(--primary); border-radius: 12px;
+            display: grid; place-items: center; color: #000; font-weight: 900;
+            transform: perspective(500px) rotateY(20deg); box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* 3. DACK SWITCH (MODE) */
+        .mode-btn { background: var(--dark-green); color: white; padding: 8px 18px; border-radius: 50px; cursor: pointer; font-weight: 800; font-size: 12px; border: none; }
+
+        /* 4. CONTENT SECTIONS */
+        .hero { margin-top: 180px; text-align: center; padding: 50px 10%; }
+        .visual-3d { font-size: 120px; animation: float 6s infinite ease-in-out; display: block; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.1)); }
+        @keyframes float { 0%, 100% { transform: translateY(0) rotate(5deg); } 50% { transform: translateY(-30px) rotate(-5deg); } }
+
+        .info-section { padding: 80px 10%; display: flex; align-items: center; gap: 50px; opacity: 0; transform: translateY(40px); }
+        .info-section.visible { opacity: 1; transform: translateY(0); }
+        .info-section:nth-child(even) { flex-direction: row-reverse; background: rgba(0, 184, 148, 0.05); }
+
+        .card { background: var(--card); padding: 40px; border-radius: 30px; box-shadow: 0 20px 45px rgba(0,0,0,0.05); flex: 1; }
+        .card h2 { color: var(--primary); font-size: 2.2rem; margin-bottom: 15px; }
+
+        /* 5. DONATION BOX & ROSHAN JAW QR (FIXED) */
+        .donation-area {
+            background: linear-gradient(145deg, var(--dark-green), #051408);
+            color: white; padding: 80px 10%; text-align: center; border-radius: 50px;
+            margin: 60px 5%; border: 2px solid var(--primary); box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+        }
+        .qr-box { background: white; padding: 15px; border-radius: 25px; display: inline-block; margin: 30px 0; border: 5px solid var(--accent); }
+        .qr-img { width: 260px; height: auto; border-radius: 10px; }
+        .upi-btn {
+            background: var(--accent); color: #000; padding: 18px 45px; border-radius: 50px;
+            text-decoration: none; font-weight: 900; font-size: 1.3rem; display: inline-block;
+            box-shadow: 0 10px 25px rgba(253, 203, 110, 0.4);
+        }
+
+        /* 6. POP-UP (PLANT OF THE WEEK) */
+        #popup {
+            position: fixed; bottom: -100%; right: 30px; width: 320px; background: var(--card);
+            padding: 30px; border-radius: 25px; z-index: 6000; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            border-top: 6px solid var(--primary);
+        }
+        #popup.active { bottom: 30px; }
+
+        .leaf { position: fixed; top: -50px; z-index: 1000; animation: fall 8s linear infinite; pointer-events: none; opacity: 0.4; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+    </style>
+</head>
+<body>
+
+    <div class="headline-bar">
+        <div class="headline-track">
+            <div class="h-item">🌿 GREEN LIFE NEWS: 10 Lakh Naye Ped Lagaye Gaye!</div>
+            <div class="h-item">🦁 WILDLIFE: Sheron Ki Abadi Mein 20% Sudhaar Dekha Gaya.</div>
+            <div class="h-item">📱 DONATE TO ROSHAN JAW: roshanjaw238-1@okhdfcbank</div>
+            <div class="h-item">🌍 HELP: Support Reforestation & Save Nature.</div>
+            <div class="h-item">🌿 GREEN LIFE NEWS: 10 Lakh Naye Ped Lagaye Gaye!</div>
+            <div class="h-item">🦁 WILDLIFE: Sheron Ki Abadi Mein 20% Sudhaar Dekha Gaya.</div>
+            <div class="h-item">📱 DONATE TO ROSHAN JAW: roshanjaw238-1@okhdfcbank</div>
+            <div class="h-item">🌍 HELP: Support Reforestation & Save Nature.</div>
+        </div>
+    </div>
+
+    <header>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="logo-box">GL</div>
+            <h1 style="font-size: 24px; font-weight: 900; letter-spacing: -1px; color: var(--primary);">GREEN LIFE</h1>
+        </div>
+        <button class="mode-btn" onclick="document.body.classList.toggle('dark-mode')">Dack Switch ☀️</button>
+    </header>
+
+    <section class="hero">
+        <span class="visual-3d">🌳</span>
+        <h1 style="font-size: 4rem; line-height: 1;">Ek Zindagi, Ek <br><span style="color:var(--primary);">&lt;Hariyali&gt;</span></h1>
+        <p style="max-width: 700px; margin: 25px auto; font-size: 1.3rem; opacity: 0.8;">Insaan aur Prakriti ka gehra rishta hi hamare bhavishya ki buniyaad hai.</p>
+    </section>
+
+    <section class="info-section">
+        <div class="card">
+            <h2>Photosynthesis</h2>
+            <p>Haryali sirf dikhne mein sundar nahi hoti, yeh duniya ka sabse bada oxygen filter hai. Ped suraj ki roshni lekar hamare liye oxygen banate hain.</p>
+        </div>
+        <div class="visual-3d" style="font-size: 80px;">🌿</div>
+    </section>
+
+    
+
+    <section class="info-section">
+        <div class="visual-3d" style="font-size: 80px;">🦁</div>
+        <div class="card">
+            <h2>Wildlife: Humare Sathi</h2>
+            <p>Wildlife ke bina ecosystem adhoora hai. Janwar jungle ke gardener hote hain jo beejon ko phailate hain aur santulan banaye rakhte hain.</p>
+        </div>
+    </section>
+
+    
+
+    <section class="donation-area">
+        <h2 style="font-size: 3rem; color: var(--accent);">Support Roshan Jaw 🌍</h2>
+        <p style="font-size: 1.2rem; margin: 20px 0;">Aapka ek chota sa donation naye ped lagane mein madad karega.</p>
+        
+        <div class="qr-box">
+            <img src="WhatsApp Image 2026-02-03 at 12.15.25.jpeg" class="qr-img" alt="Roshan Jaw UPI Scanner">
+        </div>
+        
+        <div style="font-size: 1.3rem; margin-bottom: 25px;">UPI ID: <strong>roshanjaw238-1@okhdfcbank</strong></div>
+        
+        <a href="upi://pay?pa=roshanjaw238-1@okhdfcbank&pn=Roshan%20Jaw&cu=INR" class="upi-btn">Pay via UPI App 📱</a>
+    </section>
+
+    <div id="popup">
+        <h3 style="color:var(--primary);">Plant of the Week 🌱</h3>
+        <p style="margin: 10px 0;"><b>Snake Plant:</b> Ye paudha raat mein Oxygen dene wala king hai! Bedroom ke liye best.</p>
+        <button onclick="document.getElementById('popup').classList.remove('active')" style="border:none; background:none; color:var(--primary); font-weight:900; cursor:pointer;">GOT IT!</button>
+    </div>
+
+    <footer style="padding: 60px; text-align: center; background: #000; color: #444;">
+        <h2 style="color:#fff;">GREEN LIFE</h2>
+        <p>© 2026 Professional Nature Encyclopedia | Sustainable Future</p>
+    </footer>
+
+    <script>
+        // 1. Pop-up after 3s
+        setTimeout(() => { document.getElementById('popup').classList.add('active'); }, 3000);
+
+        // 2. Scroll Reveal Logic
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.info-section').forEach(s => observer.observe(s));
+
+        // 3. Falling Leaves Effect
+        setInterval(() => {
+            const l = document.createElement('div');
+            l.innerHTML = '🍃'; l.className = 'leaf';
+            l.style.left = Math.random() * 100 + 'vw';
+            l.style.fontSize = Math.random() * 20 + 20 + 'px';
+            document.body.appendChild(l);
+            setTimeout(() => l.remove(), 8000);
+        }, 1500);
+    </script>
+</body>
+</html>
